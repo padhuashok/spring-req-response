@@ -34,8 +34,8 @@ public class TextServiceTest {
     public void testCamelizeWithInitalCaps() throws Exception {
 
         RequestBuilder rq = MockMvcRequestBuilders.get("/camelize").
-                queryParam("originalString","this_is_a_thing").
-                queryParam("isInitialCaps","true").
+                queryParam("original","this_is_a_thing").
+                queryParam("initialCap","true").
                 accept(MediaType.TEXT_PLAIN);
         this.mvc.perform(rq).
                 andExpect(status().isOk())
