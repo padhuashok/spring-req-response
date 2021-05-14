@@ -5,9 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class TextService {
@@ -61,4 +64,30 @@ public class TextService {
         }
         return original;
     }
+
+    @RequestMapping(value = "/encode" ,method = POST)
+    public String encodeString(@RequestParam String message, @RequestParam String key){
+        String encodedString ="";
+        Map<String,String> letterPair = new HashMap<String,String>();
+        String[] keyArr = key.split("");
+        String[] letterArr = {"a","b","c","d","e","f","g","h","i","j"
+                ,"k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+
+        for(int i = 0;i < letterArr.length;i++){
+            letterPair.put(letterArr[i],keyArr[i]);
+        }
+        String[] messageArr = message.split(" ");
+        for (String m:messageArr) {
+            String[] word = m.split("");
+            String encodedWord = "";
+            for (String c : word)
+            {
+                if(letterPair.containsKey(c))
+                    encodedWord+=letterPair.get(c);
+            }
+            encodedString += encodedWord + " ";
+        }
+        return encodedString.trim();
+    }
+
 }
