@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,5 +69,16 @@ public class TextServiceTest {
         this.mvc.perform(rq).
                 andExpect(status().isOk())
                 .andExpect(content().string("****_is_*_thing-with_many_*******"));
+    }
+
+    @Test
+    public void testEncode() throws Exception {
+
+        this.mvc.perform(post("/encode").
+                queryParam("message","a little of this and a little of that").
+                queryParam("key","mcxrstunopqabyzdefghijklvw").
+                accept(MediaType.TEXT_PLAIN)).
+                andExpect(status().isOk()).
+                andExpect(content().string("m aohhas zt hnog myr m aohhas zt hnmh"));
     }
 }
