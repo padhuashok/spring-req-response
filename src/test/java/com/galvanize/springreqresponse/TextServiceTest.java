@@ -77,8 +77,18 @@ public class TextServiceTest {
         this.mvc.perform(post("/encode").
                 queryParam("message","a little of this and a little of that").
                 queryParam("key","mcxrstunopqabyzdefghijklvw").
-                accept(MediaType.TEXT_PLAIN)).
+                accept(MediaType.APPLICATION_FORM_URLENCODED)).
                 andExpect(status().isOk()).
                 andExpect(content().string("m aohhas zt hnog myr m aohhas zt hnmh"));
+    }
+
+    @Test
+    public void testFindFromPath() throws Exception {
+
+        this.mvc.perform(post("/s/little/big")
+                .content("i just got a little cat"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("i just got a big cat"));
+
     }
 }

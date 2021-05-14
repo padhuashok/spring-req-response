@@ -1,9 +1,7 @@
 package com.galvanize.springreqresponse;
 
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +58,7 @@ public class TextService {
             for (int i = 0; i < item.length(); i++) {
                 stars += "*";
             }
-            original.replace(item, stars);
+            original = original.replaceFirst(item, stars);
         }
         return original;
     }
@@ -89,5 +87,19 @@ public class TextService {
         }
         return encodedString.trim();
     }
+
+    @PostMapping("/s/{find}/{replace}")
+    public String getRawString(@PathVariable String find,
+                               @PathVariable String replace,
+                               @RequestBody String search) {
+        String response = search.replace(find, replace);
+
+        return response;
+    }
+
+
+
+
+
 
 }
