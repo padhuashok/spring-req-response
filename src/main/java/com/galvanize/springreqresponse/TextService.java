@@ -13,32 +13,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 public class TextService {
 
-    static String toProperCase(String s) {
-        String temp=s.trim();
-        String spaces="";
-        if(temp.length()!=s.length())
-        {
-            int startCharIndex=s.charAt(temp.indexOf(0));
-            spaces=s.substring(0,startCharIndex);
-        }
-        temp=temp.substring(0, 1).toUpperCase() +
-                spaces+temp.substring(1).toLowerCase()+" ";
-        return temp;
-
-    }
-
-    static String toCamelCase(String s){
-        String[] parts = s.split(" ");
-        String camelCaseString = "";
-        for (String part : parts){
-            if(part!=null && part.trim().length()>0)
-                camelCaseString = camelCaseString + toProperCase(part);
-            else
-                camelCaseString=camelCaseString+part+" ";
-        }
-        return camelCaseString;
-    }
-
     @RequestMapping(value = "/camelize", method = GET)
     public String toCamelize(@RequestParam String original,@RequestParam(required = false) boolean initialCap ){
         String[] origArr = original.split("_");
@@ -53,14 +27,24 @@ public class TextService {
 
     @RequestMapping(value = "/redact", method = GET)
     public String replaceWords(@RequestParam String original, @RequestParam List<String> badWord){
-        for (String item : badWord) {
+        String[] originalArr = original.split(" ");
+        String result = "";
+        for (String word:originalArr) {
             String stars = "";
-            for (int i = 0; i < item.length(); i++) {
-                stars += "*";
+            for (String item : badWord) {
+                if(item.equals(word)){
+                    for (int i = 0; i < item.length(); i++) {
+                        stars += "*";
+                    }
+                    break;
+                }
             }
-            original = original.replaceFirst(item, stars);
+            if (stars.length()>0)
+                result+=stars + " ";
+            else
+                result+=word + " ";
         }
-        return original;
+        return result.trim();
     }
 
     @RequestMapping(value = "/encode" ,method = POST)
@@ -70,22 +54,17 @@ public class TextService {
         String[] keyArr = key.split("");
         String[] letterArr = {"a","b","c","d","e","f","g","h","i","j"
                 ,"k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
-
         for(int i = 0;i < letterArr.length;i++){
+            System.out.println("key and value in map==" + letterArr[i] + " "+ keyArr[i]);
             letterPair.put(letterArr[i],keyArr[i]);
         }
-        String[] messageArr = message.split(" ");
-        for (String m:messageArr) {
-            String[] word = m.split("");
-            String encodedWord = "";
-            for (String c : word)
-            {
-                if(letterPair.containsKey(c))
-                    encodedWord+=letterPair.get(c);
-            }
-            encodedString += encodedWord + " ";
+        letterPair.put(" "," ");
+        for (char c : message.toCharArray())
+        {
+            System.out.println("character "+c);
+            encodedString += letterPair.get(""+c);
         }
-        return encodedString.trim();
+        return encodedString;
     }
 
     @PostMapping("/s/{find}/{replace}")
@@ -96,10 +75,4 @@ public class TextService {
 
         return response;
     }
-
-
-
-
-
-
 }

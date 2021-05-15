@@ -63,12 +63,12 @@ public class TextServiceTest {
     public void testSplit() throws Exception {
 
         RequestBuilder rq = MockMvcRequestBuilders.get("/redact").
-                queryParam("original","this_is_a_thing-with_many_letters").
+                queryParam("original","this is a thing with many letters").
                 queryParam("badWord","this,a,letters").
                 accept(MediaType.TEXT_PLAIN);
         this.mvc.perform(rq).
                 andExpect(status().isOk())
-                .andExpect(content().string("****_is_*_thing-with_many_*******"));
+                .andExpect(content().string("**** is * thing with many *******"));
     }
 
     @Test
